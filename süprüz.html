@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sürpriz! ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background-color: #000000;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="turtleCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById('turtleCanvas');
+const ctx = canvas.getContext('2d');
+
+// Ekran boyutunu cihaza göre otomatik ayarla (iPhone desteği)
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Python Kodundaki Değişkenler
+let scale = 11;
+let i = 0;
+
+// Ekran ölçeği (Telefonda ve PC'de düzgün sığması için)
+function getScaleFactor() {
+    return Math.min(canvas.width, canvas.height) / 600;
+}
+
+function drawStep() {
+    if (scale < 17) {
+        // Her karede 3 adım çizerek tatlı bir animasyon hızı yakalıyoruz
+        for (let speed = 0; speed < 3; speed++) {
+            if (i < 120) {
+                let angle = i * (Math.PI * 2) / 120;
+
+                // SENİN PYTHON KALIP FORMÜLÜN
+                let xRaw = 16 * Math.pow(Math.sin(angle), 3) * scale;
+                let yRaw = (13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle)) * scale;
+
+                let factor = getScaleFactor();
+                let x = (canvas.width / 2) + (xRaw * factor);
+                let y = (canvas.height / 2) - (yRaw * factor); // Y eksenini Python gibi yukarı çeviriyoruz
+
+                ctx.font = "bold " + (8 * factor) + "px Arial";
+                ctx.fillStyle = "#ffb6c1";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("I love you", x, y);
+
+                i++;
+            } else {
+                i = 0;
+                scale++;
+                break;
+            }
+        }
+        requestAnimationFrame(drawStep);
+    }
+}
+
+// Animasyonu Başlat
+drawStep();
+</script>
+
+</body>
+</html>
